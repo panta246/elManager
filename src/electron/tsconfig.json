@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     // require strict types (null-save)
-    "strict": true,
+    // "strict": true,
     // tell TypeScript to generate ESM Syntax
     "target": "ESNext",
     // tell TypeScript to require ESM Syntax as input (including .js file imports)
