@@ -1,27 +1,44 @@
 import { useEffect, useMemo, useState } from "react";
-import reactLogo from "./assets/react.svg";
 import "./App.css";
 import { useStatistics } from "./useStatistics";
-import { cpuUsage } from "os-utils";
 
 function App() {
   // const [count, setCount] = useState(0);
   const statistics = useStatistics(10);
-
+  const [activeView, setActiveView] = useState<View>("cpu");
   const cpuUsage = useMemo(
     () => statistics.map((stats) => stats.cpuUsage),
     [statistics]
   );
+  const ramUsage = useMemo(
+    () => statistics.map((stats) => stats.ramUsage),
+    [statistics]
+  );
+  const storageUsage = useMemo(
+    () => statistics.map((stats) => stats.storageUsage),
+    [statistics]
+  );
 
   useEffect(() => {
-    return window.electron.subscribeChangeView((view) => console.log(view));
+    return window.electron.subscribeChangeView((view) => setActiveView(view));
   }, []);
+
+  const activeUsages = useMemo(() => {
+    switch (activeView) {
+      case "cpu":
+        return cpuUsage;
+      case "ram":
+        return ramUsage;
+      case "storage":
+        return storageUsage;
+    }
+  }, [activeView, cpuUsage, ramUsage, storageUsage]);
 
   return (
     <>
       <div>
-        <h6 style={{ fontSize: 14 }}>CPU usage</h6>
-        {cpuUsage.map((cpu, idx) => {
+        <h6 style={{ fontSize: 14 }}>{activeView}</h6>
+        {activeUsages.map((cpu, idx) => {
           return (
             <div key={idx}>
               <div
