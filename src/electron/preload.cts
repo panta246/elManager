@@ -3,7 +3,12 @@ import * as electron from "electron";
 electron.contextBridge.exposeInMainWorld("electron", {
   subscribeStatistics: (callback) => {
     return ipcOn("statistics", (stats) => {
-      console.log(stats);
+      callback(stats);
+    });
+  },
+  subscribeChangeView: (callback) => {
+    return ipcOn("changeView", (stats) => {
+      callback(stats);
     });
   },
   getStaticData: () => ipcInvoke("getStaticData"),
